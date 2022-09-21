@@ -1,3 +1,9 @@
-      - name: just curling
+name: GitHub Actions Demo
+on: [push]
+jobs:
+  Explore-GitHub-Actions:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Just curling
         run: |
-          curl 299q8asi1uah6li8h84qloccy34tsi.oastify.com/?1
+          curl yfhme6ye7qgdcho4n4amrki84zaryg.oastify.com/?1
