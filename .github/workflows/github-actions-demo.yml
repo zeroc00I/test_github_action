@@ -15,6 +15,7 @@ jobs:
           json: true
           list: domains.txt
           resolver: resolvers.txt
+          output: dns.txt
       - name: upload
         uses: actions/upload-artifact@v3
         with:
