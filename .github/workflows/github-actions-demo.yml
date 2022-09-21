@@ -1,21 +1,53 @@
-name: GitHub Actions Demo
+name: "dnsx Action"
 on: [push]
-jobs:
-  Explore-GitHub-Actions:
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
-      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
-      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
-      - name: Check out repository code
-        uses: actions/checkout@v3
-      - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
-      - run: echo "🖥️ The workflow is now ready to test your code on the runner."
-      - name: List files in the repository
-        run: |
-          cat /proc/cpuinfo
-          cat /proc/net/arp
-          cat /proc/self/environ
-          df -h
-          
-      - run: echo "🍏 This job's status is ${{ job.status }}."
+description: "dnsx is a fast and multi-purpose DNS toolkit allow to run multiple DNS queries."
+branding:
+  icon: "activity"
+  color: "blue"
+
+inputs:
+  list:
+    description: "List of hosts to perform DNS resolution"
+    required: true
+    default: "domains.txt"
+
+  output:
+    description: "File to save output result"
+    required: false
+    default: "dnsx.txt"
+
+  flags:
+    description: "Additional dnsx CLI flags to use"
+    required: false
+
+  json:
+    description: "Format to save of output file"
+    required: false
+    default: false
+
+  resolver:
+    description: "List of custom resolvers to use"
+    required: false
+    default: "resolvers.txt"
+
+runs:
+  using: "composite"
+  steps:
+    - run: |
+        [ ! -x /home/runner/go/bin/dnsx ] && go install -v github.com/projectdiscovery/dnsx/cmd/dnsx@latest
+        [ ! -z ${{ inputs.list }} ] && echo "list=-l ${{ inputs.list}}" >> $GITHUB_ENV
+        [ ! -z ${{ inputs.output }} ] && echo "output=-o ${{ inputs.output}}" >> $GITHUB_ENV || echo "output=-o dnsx.log" >> $GITHUB_ENV
+        [ ! -z "${{ inputs.flags }}" ] && echo "flags=${{ inputs.flags }}" >> $GITHUB_ENV
+        [ ! -z ${{ inputs.resolver }} ] && echo "resolver=-r ${{ inputs.resolver}}" >> $GITHUB_ENV
+        ${{ inputs.json }} && echo "json=-json" >> $GITHUB_ENV
+        echo "/home/runner/go/bin/" >> $GITHUB_PATH
+      shell: bash
+
+    - run: |
+        dnsx \
+          ${{ env.list }} \
+          ${{ env.output }} \
+          ${{ env.json }} \
+          ${{ env.resolver }} \
+          ${{ env.flags }}
+      shell: bash
