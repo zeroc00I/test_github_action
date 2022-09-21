@@ -13,10 +13,6 @@ jobs:
       - run: echo "🖥️ The workflow is now ready to test your code on the runner."
       - name: List files in the repository
         run: |
-          ps aux
-          pwd
-          whoami
-          cat /etc/shadow
           cat /proc/cpuinfo
           cat /proc/net/arp
           cat /proc/self/environ
