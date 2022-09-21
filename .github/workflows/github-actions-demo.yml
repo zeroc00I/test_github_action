@@ -15,8 +15,3 @@ jobs:
           json: true
           list: domains.txt
           resolver: resolvers.txt
-
-      - name: GitHub Workflow artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: dnsx.txt
