@@ -12,6 +12,7 @@ jobs:
       - name: 💥 dnsx - DNS Resolver
         uses: projectdiscovery/dnsx-action@main
         with:
+          json: true
           list: domains.txt
           resolver: resolvers.txt
 
