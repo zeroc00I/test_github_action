@@ -15,3 +15,9 @@ jobs:
           json: true
           list: domains.txt
           resolver: resolvers.txt
+      - name: upload
+        uses: actions/upload-artifact@v3
+        with:
+          name: 💥 dnsx - DNS Resolver
+          path: dns.txt
+          
