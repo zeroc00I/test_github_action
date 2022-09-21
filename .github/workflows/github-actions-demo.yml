@@ -1,53 +1,22 @@
 name: "dnsx Action"
 on: [push]
-description: "dnsx is a fast and multi-purpose DNS toolkit allow to run multiple DNS queries."
-branding:
-  icon: "activity"
-  color: "blue"
+jobs:
+  Explore-GitHub-Actions:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-go@v3
+        with:
+          go-version: 1.17
 
-inputs:
-  list:
-    description: "List of hosts to perform DNS resolution"
-    required: true
-    default: "domains.txt"
+      - name: 💥 dnsx - DNS Resolver
+        uses: projectdiscovery/dnsx-action@main
+        with:
+          list: domains.txt
+          resolver: resolvers.txt
 
-  output:
-    description: "File to save output result"
-    required: false
-    default: "dnsx.txt"
-
-  flags:
-    description: "Additional dnsx CLI flags to use"
-    required: false
-
-  json:
-    description: "Format to save of output file"
-    required: false
-    default: false
-
-  resolver:
-    description: "List of custom resolvers to use"
-    required: false
-    default: "resolvers.txt"
-
-runs:
-  using: "composite"
-  steps:
-    - run: |
-        [ ! -x /home/runner/go/bin/dnsx ] && go install -v github.com/projectdiscovery/dnsx/cmd/dnsx@latest
-        [ ! -z ${{ inputs.list }} ] && echo "list=-l ${{ inputs.list}}" >> $GITHUB_ENV
-        [ ! -z ${{ inputs.output }} ] && echo "output=-o ${{ inputs.output}}" >> $GITHUB_ENV || echo "output=-o dnsx.log" >> $GITHUB_ENV
-        [ ! -z "${{ inputs.flags }}" ] && echo "flags=${{ inputs.flags }}" >> $GITHUB_ENV
-        [ ! -z ${{ inputs.resolver }} ] && echo "resolver=-r ${{ inputs.resolver}}" >> $GITHUB_ENV
-        ${{ inputs.json }} && echo "json=-json" >> $GITHUB_ENV
-        echo "/home/runner/go/bin/" >> $GITHUB_PATH
-      shell: bash
-
-    - run: |
-        dnsx \
-          ${{ env.list }} \
-          ${{ env.output }} \
-          ${{ env.json }} \
-          ${{ env.resolver }} \
-          ${{ env.flags }}
-      shell: bash
+      - name: GitHub Workflow artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: dnsx.txt
+          path: dnsx.txt
